@@ -17,18 +17,19 @@ function App() {
     setCustomFields(!customFields);
   }
 
-  useEffect((customFields, players) => {
-    if (customFields) return;
-    if (players <= 4) { setInputState({ players, rounds: 0, topCut: players }) } else
-      if (players <= 8) { setInputState({ players, rounds: 0, topCut: players }) } else
-        if (players <= 16) { setInputState({ players, rounds: 5, topCut: 4 }) } else
-          if (players <= 32) { setInputState({ players, rounds: 5, topCut: 8 }) } else
-            if (players <= 64) { setInputState({ players, rounds: 6, topCut: 8 }) } else
-              if (players <= 128) { setInputState({ players, rounds: 7, topCut: 8 }) } else
-                if (players <= 226) { setInputState({ players, rounds: 8, topCut: 8 }) } else
-                  if (players <= 409) { setInputState({ players, rounds: 9, topCut: 8 }) } else
-                    if (players >= 410) { setInputState({ players, rounds: 10, topCut: 8 }) }
-  }, [setInputState])
+  useEffect(() => {
+    if (!customFields) {
+      if (players <= 4 && customFields) { setInputState({ players, rounds: 0, topCut: players }) } else
+        if (players <= 8) { setInputState({ players, rounds: 0, topCut: players }) } else
+          if (players <= 16) { setInputState({ players, rounds: 5, topCut: 4 }) } else
+            if (players <= 32) { setInputState({ players, rounds: 5, topCut: 8 }) } else
+              if (players <= 64) { setInputState({ players, rounds: 6, topCut: 8 }) } else
+                if (players <= 128) { setInputState({ players, rounds: 7, topCut: 8 }) } else
+                  if (players <= 226) { setInputState({ players, rounds: 8, topCut: 8 }) } else
+                    if (players <= 409) { setInputState({ players, rounds: 9, topCut: 8 }) } else
+                      if (players >= 410) { setInputState({ players, rounds: 10, topCut: 8 }) }
+    }
+  }, [players, customFields])
 
   function inputFields() {
     if (customFields) return (
