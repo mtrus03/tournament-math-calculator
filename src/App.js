@@ -44,13 +44,26 @@ function App() {
   // }
 
   function calculateCanDraw() {
-    let canDraw;
-    // player is undefeated
-    if (playerPoints >= (rounds - 1) * 3) { canDraw = true; }
-    
+    let points = playerPoints;
+    let standings = [];
+
+    points++;
+    console.log(points < (rounds - 1) * 3 + 1);
+
+    for (let i = 0; i < undefeatedPlayers; i++) { standings.push((rounds - 1) * 3 + 1); } 
+    for (let i = 0; i < oneDrawPlayers; i++) { standings.push((rounds - 2) * 3 + 2); }
+    for (let i = 0; i < oneLossPlayers / 2; i++) { standings.push((rounds - 1) * 3); }
+
+    standings = standings.sort((a, b) => (b - a));
+    console.log(standings);
     
 
-    setCanDrawMessage(canDraw ? <Alert variant="success" className="mx-4">Yes</Alert> :  <Alert variant="danger" className="mx-4">No</Alert>)
+    if (points < (rounds - 1) * 3 + 1) { }
+    console.log(points);
+    let canDraw;
+    // player is undefeated
+    if (playerPoints >= (rounds - 1) * 3) { canDraw = true; } 
+    setCanDrawMessage(canDraw ? <Alert variant="success" className="mx-4">Yes</Alert> : <Alert variant="danger" className="mx-4">No</Alert>)
   }
 
   function inputFields() {
