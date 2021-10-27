@@ -54,10 +54,11 @@ function App() {
     for (let i = 0; i < oneDrawPlayers; i++) { standings.push((rounds - 2) * 3 + 2); }
     for (let i = 0; i < oneLossPlayers / 2; i++) { standings.push((rounds - 1) * 3); }
 
+    while (standings.length < 8) { standings.push((rounds - 2) * 3); }
+
     standings = standings.sort((a, b) => (b - a));
     console.log(standings);
     
-
     if (points < (rounds - 1) * 3 + 1) { }
     console.log(points);
     let canDraw;
