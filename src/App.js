@@ -4,7 +4,7 @@ import { React, useState, useEffect } from 'react';
 // import $ from 'jquery';
 
 function App() {
-  const [inputState, setInputState] = useState({ players: 32, rounds: 5, topCut: 8, playerPoints: 0, undefeatedPlayers: 0, oneLossPlayers: 0, oneDrawPlayers: 0, twoDrawPlayers: 0, twoLossPlayer: 0 });
+  const [inputState, setInputState] = useState({ players: 32, rounds: 5, topCut: 8, playerPoints: 0, undefeatedPlayers: 0, oneLossPlayers: 0, oneDrawPlayers: 0, twoDrawPlayers: 0, twoLossPlayers: 0 });
   const [customFields, setCustomFields] = useState(false);
   const [canDrawMessage, setCanDrawMessage] = useState(<Row></Row>);
   const { players, rounds, topCut, playerPoints, undefeatedPlayers, oneLossPlayers, oneDrawPlayers, twoDrawPlayers, twoLossPlayers } = inputState;
@@ -30,41 +30,60 @@ function App() {
                     if (players <= 409) { setInputState(previous => ({ ...previous, rounds: 9, topCut: 8 }) )} else
                       if (players >= 410) { setInputState(previous => ({ ...previous, rounds: 10, topCut: 8 }) )}
     }
-    // setInputState(previous => ({ ...previous, undefeatedPlayers: findPlayersWithPoints((rounds - 1) * 3, players, rounds) }))
   }, [players, customFields])
 
-  // function findPlayersWithPoints(points, count, round) {  
-  //   if (points >= round * 3) { count /= 2; }
-  //   console.log(`points: ${ points } | count: ${ count } | round: ${ round }`)
-  //   if (round > 1) { 
-  //     round--;
-  //     findPlayersWithPoints(points, count, round);
-  //   }
-  //   return count;
-  // }
-
   function calculateCanDraw() {
-    let points = playerPoints;
+    let pointsWithDraw = playerPoints;
+    pointsWithDraw++;
+    let playerPairingSkipped = false;
     let standings = [];
+    let surpass = [];
 
-    points++;
-    console.log(points < (rounds - 1) * 3 + 1);
-
-    for (let i = 0; i < undefeatedPlayers; i++) { standings.push((rounds - 1) * 3 + 1); } 
-    for (let i = 0; i < oneDrawPlayers; i++) { standings.push((rounds - 2) * 3 + 2); }
-    for (let i = 0; i < oneLossPlayers / 2; i++) { standings.push((rounds - 1) * 3); }
-
-    while (standings.length < 8) { standings.push((rounds - 2) * 3); }
-
+    for (let i = 0; i < undefeatedPlayers; i++) { standings.push( (rounds - 1) * 3 ); }
+    for (let i = 0; i < oneDrawPlayers; i++) { standings.push( (rounds - 2) * 3 + 1 ); }
+    for (let i = 0; i < twoDrawPlayers; i++) { standings.push( (rounds - 3) * 3 + 2) ; }
+    for (let i = 0; i < oneLossPlayers; i++) { standings.push( (rounds - 2) * 3 ); }
+    for (let i = 0; i < twoLossPlayers; i++) { standings.push( (rounds - 3) * 3 ); }
+    while (standings.length < players) { standings.push( (rounds - 4) * 3 + 1); }
     standings = standings.sort((a, b) => (b - a));
-    console.log(standings);
-    
-    if (points < (rounds - 1) * 3 + 1) { }
-    console.log(points);
-    let canDraw;
-    // player is undefeated
-    if (playerPoints >= (rounds - 1) * 3) { canDraw = true; } 
-    setCanDrawMessage(canDraw ? <Alert variant="success" className="mx-4">Yes</Alert> : <Alert variant="danger" className="mx-4">No</Alert>)
+
+    let pairings = [];
+    if (standings % 2) { pairings.splice(-1, 1); }
+    for (let i = 0; i < players; i += 2) { pairings.push([standings[i], standings[i + 1]]); }
+    console.log(pairings.length);
+    console.log(pairings)
+    console.log(pointsWithDraw)
+    // console.log('standings:', standings)
+    // console.log(pairings);
+    for (const pairing of pairings) {
+      // simulate user's round
+      if (pairing.includes(playerPoints) && !playerPairingSkipped) {
+        if (pairing[0] > playerPoints) { surpass.push(pairing[0] + 1); } else { surpass.push(pairing[1] + 1); }
+        playerPairingSkipped = true;
+        continue;
+      } 
+      // intentional draw puts both opponent's at or above user's score with draw
+      if (pairing[0] + 1 >= pointsWithDraw && pairing[1] + 1 >= pointsWithDraw) {
+        surpass.push(pairing[0] + 1, pairing[1] + 1);
+        continue;
+      }
+      // one opponent winning puts them at or above user's core with draw
+      if (pairing[0] + 3 >= pointsWithDraw) {
+        surpass.push(pairing[0] + 3);
+        continue;
+      }
+      if (pairing[1] + 3 >= pointsWithDraw) {
+        surpass.push(pairing[1] + 3);
+        continue;
+      }
+    }
+    // console.log(surpass);
+    let canDraw = false;
+    let beat = surpass.filter(score => score > pointsWithDraw).length;
+    let tie = surpass.filter(score => score === pointsWithDraw).length;
+    console.log(`beat: ${beat} | tie: ${tie}`)
+    if (beat + tie - 1 < topCut) { canDraw = true; }
+    setCanDrawMessage(canDraw ? <Alert variant="success" className="mx-4">Yes, you can safely draw in.</Alert> : <Alert variant="danger" className="mx-4">No, you cannot safely draw in.</Alert>)
   }
 
   function inputFields() {
@@ -161,9 +180,9 @@ function App() {
             <Button variant="btn btn-primary mb-4 w-75 mx-auto" onClick={calculateCanDraw}>Can I Draw In?</Button>
           </Row>
           
-          <Row>
+          <>
             {canDrawMessage}
-          </Row>
+          </>
         </Col>
       </Row>
     </Container>
