@@ -4,10 +4,10 @@ import { React, useState, useEffect } from 'react';
 // import $ from 'jquery';
 
 function App() {
-  const [inputState, setInputState] = useState({ players: 32, rounds: 5, topCut: 8, playerPoints: 0, undefeatedPlayers: 0, oneLossPlayers: 0, oneDrawPlayers: 0 });
+  const [inputState, setInputState] = useState({ players: 32, rounds: 5, topCut: 8, playerPoints: 0, undefeatedPlayers: 0, oneLossPlayers: 0, oneDrawPlayers: 0, twoDrawPlayers: 0, twoLossPlayer: 0 });
   const [customFields, setCustomFields] = useState(false);
   const [canDrawMessage, setCanDrawMessage] = useState(<Row></Row>);
-  const { players, rounds, topCut, playerPoints, undefeatedPlayers, oneLossPlayers, oneDrawPlayers } = inputState;
+  const { players, rounds, topCut, playerPoints, undefeatedPlayers, oneLossPlayers, oneDrawPlayers, twoDrawPlayers, twoLossPlayers } = inputState;
   
   function handleInput(event) {
     const { name, value } = event.target;
@@ -140,7 +140,19 @@ function App() {
             <Col sm={6}>
               <Form.Group className="mb-4">
                 <Form.Control name="oneLossPlayers" type="text" id="oneLossPlayers" value={inputState.oneLossPlayers} className="w-50 mx-auto form-control form-control-lg text-center" onChange={handleInput} />
-                <Form.Label className="h5">Players with {3 * (rounds - 2)} Points ({rounds - 2} - 1)</Form.Label>
+                <Form.Label className="h5">Players with {3 * (rounds - 2)} Points ({rounds - 2}-1)</Form.Label>
+              </Form.Group>
+            </Col>
+            <Col sm={6}>
+              <Form.Group className="mb-4">
+                <Form.Control name="twoDrawPlayers" type="text" id="twoDrawPlayers" value={inputState.twoDrawPlayers} className="w-50 mx-auto form-control form-control-lg text-center" onChange={handleInput} />
+                <Form.Label className="h5">Players with {3 * (rounds - 3) + 2} Points ({rounds - 3}-0-2)</Form.Label>
+              </Form.Group>
+            </Col>
+            <Col sm={6}>
+              <Form.Group className="mb-4">
+                <Form.Control name="twoLossPlayers" type="text" id="twoLossPlayers" value={inputState.twoLossPlayers} className="w-50 mx-auto form-control form-control-lg text-center" onChange={handleInput} />
+                <Form.Label className="h5">Players with {3 * (rounds - 3)} Points ({rounds - 3}-2)</Form.Label>
               </Form.Group>
             </Col>
           </Row>
