@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/tournament-math-calculator/static/css/main.a617e044.chunk.css",
-    "main.js": "/tournament-math-calculator/static/js/main.87f86e50.chunk.js",
-    "main.js.map": "/tournament-math-calculator/static/js/main.87f86e50.chunk.js.map",
+    "main.js": "/tournament-math-calculator/static/js/main.8116b211.chunk.js",
+    "main.js.map": "/tournament-math-calculator/static/js/main.8116b211.chunk.js.map",
     "runtime-main.js": "/tournament-math-calculator/static/js/runtime-main.ceb15f4b.js",
     "runtime-main.js.map": "/tournament-math-calculator/static/js/runtime-main.ceb15f4b.js.map",
     "static/js/2.68b13cc9.chunk.js": "/tournament-math-calculator/static/js/2.68b13cc9.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.ceb15f4b.js",
     "static/js/2.68b13cc9.chunk.js",
     "static/css/main.a617e044.chunk.css",
-    "static/js/main.87f86e50.chunk.js"
+    "static/js/main.8116b211.chunk.js"
   ]
 }
